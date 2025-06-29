@@ -1,0 +1,218 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Md. Razib Hossain - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .section-toggle::after {
+            content: '➕';
+            float: right;
+        }
+        .section-toggle.active::after {
+            content: '➖';
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-gray-900 text-white p-4 sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold">Md. Razib Hossain, PMP</h1>
+            <div class="space-x-4">
+                <a href="#home" class="hover:text-blue-400 transition">Home</a>
+                <a href="#about" class="hover:text-blue-400 transition">About</a>
+                <a href="#experience" class="hover:text-blue-400 transition">Experience</a>
+                <a href="#skills" class="hover:text-blue-400 transition">Skills</a>
+                <a href="#contact" class="hover:text-blue-400 transition">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center text-center text-white">
+        <div class="container mx-auto px-4 flex flex-col items-center">
+            <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAAAAAAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAQABADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9//AIP8A8Xv8A+EPjD/wAIvYf8AHx5v/2Q==" alt="Md. Razib Hossain" class="w-48 h-48 rounded-full object-cover mb-6 border-4 border-white shadow-lg">
+            <h1 class="text-5xl font-bold mb-4">Md. Razib Hossain</h1>
+            <p class="text-2xl mb-6">Deputy Manager - ERP | PMP Certified | Business Analyst</p>
+            <a href="#contact" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition">Get in Touch</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-center">About Me</h2>
+            <p class="text-lg mb-6">I am a dedicated professional with over 14 years of experience in ERP implementation, project management, and business analysis. Currently serving as Deputy Manager - ERP at Epyllion Group, I specialize in designing enterprise-level solutions, driving process improvements, and leading cross-functional teams to deliver projects within scope, budget, and timeline. My goal is to advance to high-level management by leveraging my expertise and commitment to innovation.</p>
+            <p class="text-lg">PMP certified, I bring a strategic mindset to align IT strategies with business objectives, ensuring seamless system integration and operational efficiency.</p>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-center">Employment History</h2>
+            <div class="space-y-4">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold section-toggle cursor-pointer" onclick="toggleSection('exp1')">Deputy Manager (Core Domain Architect) - Epyllion Group <span class="text-sm text-gray-500">(Oct 2024 - Present)</span></h3>
+                    <div id="exp1" class="hidden mt-4">
+                        <p><strong>Responsibilities:</strong></p>
+                        <ul class="list-disc pl-6">
+                            <li>Lead design and development of enterprise-level solutions.</li>
+                            <li>Develop comprehensive domain architectures for applications, data, and technology.</li>
+                            <li>Collaborate with cross-functional teams for seamless system integration.</li>
+                            <li>Drive innovation through automation and emerging technologies.</li>
+                            <li>Provide technical leadership and ensure compliance with enterprise standards.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold section-toggle cursor-pointer" onclick="toggleSection('exp2')">Assistant Manager (Project Management) - Epyllion Group <span class="text-sm text-gray-500">(Mar 2021 - Sep 2024)</span></h3>
+                    <div id="exp2" class="hidden mt-4">
+                        <p><strong>Responsibilities:</strong></p>
+                        <ul class="list-disc pl-6">
+                            <li>Managed full project life cycle, ensuring delivery within scope, budget, and timeline.</li>
+                            <li>Developed business architecture considering scope, processes, and risks.</li>
+                            <li>Conducted multi-level testing to meet business needs.</li>
+                            <li>Liaised between business and technical teams for shared understanding.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold section-toggle cursor-pointer" onclick="toggleSection('exp3')">Assistant Manager (ERP Implementation & Business Analyst) - Meghna Group <span class="text-sm text-gray-500">(May 2019 - Feb 2021)</span></h3>
+                    <div id="exp3" class="hidden mt-4">
+                        <p><strong>Responsibilities:</strong></p>
+                        <ul class="list-disc pl-6">
+                            <li>Gathered software requirements and aligned with development teams.</li>
+                            <li>Translated stakeholder needs into functional specifications and process diagrams.</li>
+                            <li>Evaluated risks and resolved errors in business data.</li>
+                            <li>Maintained alignment between business and technical requirements.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold section-toggle cursor-pointer" onclick="toggleSection('exp4')">Sr. Executive (ERP Implementation) - Epyllion Group <span class="text-sm text-gray-500">(Jan 2016 - May 2019)</span></h3>
+                    <div id="exp4" class="hidden mt-4">
+                        <p><strong>Responsibilities:</strong></p>
+                        <ul class="list-disc pl-6">
+                            <li>Analyzed business processes for improvement opportunities.</li>
+                            <li>Gathered and interpreted data to drive operational efficiency.</li>
+                            <li>Supported system configuration with over 90% user satisfaction.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold section-toggle cursor-pointer" onclick="toggleSection('exp5')">Implementation In-Charge - Birds Group <span class="text-sm text-gray-500">(Aug 2011 - Dec 2015)</span></h3>
+                    <div id="exp5" class="hidden mt-4">
+                        <p><strong>Responsibilities:</strong></p>
+                        <ul class="list-disc pl-6">
+                            <li>Analyzed business processes for improvement opportunities.</li>
+                            <li>Gathered and interpreted data to inform decision-making.</li>
+                            <li>Supported system configuration with over 90% user satisfaction.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-center">Skills</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="bg-gray-100 p-4 rounded-lg text-center">Project Management</div>
+                <div class="bg-gray-100 p-4 rounded-lg text-center">Business Analysis</div>
+                <div class="bg-gray-100 p-4 rounded-lg text-center">ERP Implementation</div>
+                <div class="bg-gray-100 p-4 rounded-lg text-center">Data Management</div>
+                <div class="bg-gray-100 p-4 rounded-lg text-center">Software Implementation</div>
+                <div class="bg-gray-100 p-4 rounded-lg text-center">Process Improvement</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certifications Section -->
+    <section id="certifications" class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-center">Certifications</h2>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold">Project Management Professional (PMP)</h3>
+                <p class="text-gray-600">Project Management Institute | May 2023 - May 2026</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-center">Contact Me</h2>
+            <div class="text-center">
+                <p class="text-lg mb-4">📍 218/5, East Rampura, Dhaka</p>
+                <p class="text-lg mb-4">📞 +8801734503977</p>
+                <p class="text-lg mb-4">📧 ahmedrazib08@gmail.com | mdrazib_l@yahoo.com</p>
+                <p class="text-lg mb-4">🔗 <a href="https://www.linkedin.com/in/razib-hossain" class="text-blue-600 hover:underline" target="_blank">LinkedIn Profile</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white text-center p-4">
+        <p>© 2025 Md. Razib Hossain. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function toggleSection(id) {
+            const element = document.getElementById(id);
+            const toggle = element.previousElementSibling;
+            element.classList.toggle('hidden');
+            toggle.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
