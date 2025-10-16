@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -78,6 +39,7 @@
                 <a href="#home" class="hover:text-blue-400 transition">Home</a>
                 <a href="#about" class="hover:text-blue-400 transition">About</a>
                 <a href="#experience" class="hover:text-blue-400 transition">Experience</a>
+                <a href="#projects" class="hover:text-blue-400 transition">Projects</a>
                 <a href="#skills" class="hover:text-blue-400 transition">Skills</a>
                 <a href="#contact" class="hover:text-blue-400 transition">Contact</a>
             </div>
@@ -87,9 +49,9 @@
     <!-- Home Section -->
     <section id="home" class="min-h-screen flex items-center justify-center text-center text-white">
         <div class="container mx-auto px-4 flex flex-col items-center">
-            <img src="profile.jpg" alt="Md. Razib Hossain" class="w-48 h-48 rounded-full object-cover mb-6 border-4 border-white shadow-lg">
+            <img src="https://raw.githubusercontent.com/EpyRazib/portfolio/refs/heads/main/profile.jpg" alt="Md. Razib Hossain" class="w-48 h-48 rounded-full object-cover mb-6 border-4 border-white shadow-lg">
             <h1 class="text-5xl font-bold mb-4">Md. Razib Hossain</h1>
-            <p class="text-2xl mb-6">Deputy Manager - ERP | PMP Certified | Business Analyst</p>
+            <p class="text-2xl mb-6">Deputy Manager - ERP | PMP Certified | Business Analyst | AI & Data Enthusiast</p>
             <a href="#contact" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition">Get in Touch</a>
         </div>
     </section>
@@ -99,6 +61,7 @@
         <div class="container mx-auto px-4">
             <h2 class="text-3xl font-bold mb-8 text-center">About Me</h2>
             <p class="text-lg mb-6">I am a dedicated professional with over 14 years of experience in ERP implementation, project management, and business analysis. Currently serving as Deputy Manager - ERP at Epyllion Group, I specialize in designing enterprise-level solutions, driving process improvements, and leading cross-functional teams to deliver projects within scope, budget, and timeline. My goal is to advance to high-level management by leveraging my expertise and commitment to innovation.</p>
+            <p class="text-lg mb-6">Beyond traditional domains, I am passionate about leveraging cutting-edge technologies like Python for automation, AI-driven data tools, and dynamic analytics platforms to solve complex business challenges and enhance decision-making.</p>
             <p class="text-lg">PMP certified, I bring a strategic mindset to align IT strategies with business objectives, ensuring seamless system integration and operational efficiency.</p>
         </div>
     </section>
@@ -171,34 +134,79 @@
         </div>
     </section>
 
-    <!-- Skills Section -->
-    <section id="skills" class="py-16 bg-white">
+    <!-- Projects Section -->
+    <section id="projects" class="py-16 bg-white">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-8 text-center">Skills</h2>
+            <h2 class="text-3xl font-bold mb-8 text-center">Key Projects & Achievements</h2>
+            <div class="space-y-6">
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4">Dynamic Data Analytics Tool</h3>
+                    <p class="text-lg mb-4">Developed a versatile data analytics platform that dynamically connects to any database, enabling real-time data extraction, analysis, and visualization. This tool empowers users to perform ad-hoc queries and generate insights without predefined schemas, streamlining business intelligence processes.</p>
+                    <ul class="list-disc pl-6 mb-4">
+                        <li>Supports multiple database types (e.g., SQL Server, MySQL, PostgreSQL).</li>
+                        <li>Features interactive dashboards for trend analysis and reporting.</li>
+                        <li>Achieved 40% reduction in manual data processing time in pilot implementations.</li>
+                    </ul>
+                    <p class="text-sm text-gray-600 italic">Technologies: Python, SQL, Pandas, Matplotlib/Plotly</p>
+                </div>
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4">AI-Powered Natural Language to SQL Query Tool</h3>
+                    <p class="text-lg mb-4">Built an innovative AI-driven application that translates natural language queries into executable SQL statements, allowing non-technical users to retrieve data and generate charts effortlessly. Integrated with Gemini AI API for enhanced accuracy in query generation and result interpretation.</p>
+                    <ul class="list-disc pl-6 mb-4">
+                        <li>Handles complex queries with joins, aggregations, and filters.</li>
+                        <li>Generates dynamic charts (bar, line, pie) based on query results.</li>
+                        <li>Improved user accessibility to data by 60%, reducing dependency on data specialists.</li>
+                    </ul>
+                    <p class="text-sm text-gray-600 italic">Technologies: Python, Gemini AI API, SQLAlchemy, Streamlit for UI</p>
+                </div>
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4">Python & Selenium Automation Frameworks</h3>
+                    <p class="text-lg mb-4">Designed and implemented robust automation scripts using Python and Selenium to streamline repetitive tasks such as web scraping, form submissions, and end-to-end testing. These frameworks have been deployed in ERP environments to automate compliance checks and data validation, enhancing operational efficiency.</p>
+                    <ul class="list-disc pl-6 mb-4">
+                        <li>Automated over 500+ test cases with 95% coverage.</li>
+                        <li>Integrated with CI/CD pipelines for continuous regression testing.</li>
+                        <li>Saved 30+ hours per week in manual QA efforts.</li>
+                    </ul>
+                    <p class="text-sm text-gray-600 italic">Technologies: Python, Selenium WebDriver, BeautifulSoup, pytest</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-center">Technical Skills & Expertise</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div class="bg-gray-100 p-4 rounded-lg text-center">Project Management</div>
-                <div class="bg-gray-100 p-4 rounded-lg text-center">Business Analysis</div>
-                <div class="bg-gray-100 p-4 rounded-lg text-center">ERP Implementation</div>
-                <div class="bg-gray-100 p-4 rounded-lg text-center">Data Management</div>
-                <div class="bg-gray-100 p-4 rounded-lg text-center">Software Implementation</div>
-                <div class="bg-gray-100 p-4 rounded-lg text-center">Process Improvement</div>
+                <div class="bg-white p-4 rounded-lg text-center shadow-md">Project Management (PMP)</div>
+                <div class="bg-white p-4 rounded-lg text-center shadow-md">Business Analysis (CBAP)</div>
+                <div class="bg-white p-4 rounded-lg text-center shadow-md">ERP Implementation</div>
+                <div class="bg-white p-4 rounded-lg text-center shadow-md">Data Management & Analytics</div>
+                <div class="bg-white p-4 rounded-lg text-center shadow-md">Software Implementation</div>
+                <div class="bg-white p-4 rounded-lg text-center shadow-md">Process Improvement</div>
+                <div class="bg-white p-4 rounded-lg text-center shadow-md">Python Programming</div>
+                <div class="bg-white p-4 rounded-lg text-center shadow-md">Selenium Automation</div>
+                <div class="bg-white p-4 rounded-lg text-center shadow-md">AI Integration (Gemini API)</div>
+                <div class="bg-white p-4 rounded-lg text-center shadow-md">SQL & Database Querying</div>
+                <div class="bg-white p-4 rounded-lg text-center shadow-md">Data Visualization (Pandas, Plotly)</div>
+                <div class="bg-white p-4 rounded-lg text-center shadow-md">Web Scraping & Testing</div>
             </div>
         </div>
     </section>
 
     <!-- Certifications Section -->
-    <section id="certifications" class="py-16 bg-gray-100">
+    <section id="certifications" class="py-16 bg-white">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl font-bold mb-8 text-center">Certifications</h2>
-            <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="bg-gray-100 p-6 rounded-lg shadow-md">
                 <h3 class="text-xl font-semibold"><a href="https://raw.githubusercontent.com/EpyRazib/portfolio/main/PMP.pdf" target="_blank" class="cert-link">Project Management Professional (PMP)</a></h3>
                 <p class="text-gray-600">Project Management Institute | May 2023 - May 2026</p>
             </div>
-            <div class="bg-white p-6 rounded-lg shadow-md mt-4">
+            <div class="bg-gray-100 p-6 rounded-lg shadow-md mt-4">
                 <h3 class="text-xl font-semibold"><a href="https://raw.githubusercontent.com/EpyRazib/portfolio/main/CBAP.pdf" target="_blank" class="cert-link">Certified Business Analysis Professional (CBAP)</a></h3>
                 <p class="text-gray-600">IIBA | Jan 2024 - Jan 2027</p>
             </div>
-            <div class="bg-white p-6 rounded-lg shadow-md mt-4">
+            <div class="bg-gray-100 p-6 rounded-lg shadow-md mt-4">
                 <h3 class="text-xl font-semibold"><a href="https://raw.githubusercontent.com/EpyRazib/portfolio/main/DSWP.pdf.pdf" target="_blank" class="cert-link">Data Science with Python</a></h3>
                 <p class="text-gray-600">Coursera | Mar 2024 - Mar 2026</p>
             </div>
@@ -206,7 +214,7 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-16 bg-white">
+    <section id="contact" class="py-16 bg-gray-100">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl font-bold mb-8 text-center">Contact Me</h2>
             <div class="text-center">
